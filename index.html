@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Number Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+            padding: 40px 35px;
+            width: 100%;
+            max-width: 900px;
+            text-align: center;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            color: #1a1a2e;
+            margin-bottom: 12px;
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .subtitle {
+            color: #5d5d7a;
+            margin-bottom: 40px;
+            font-size: 1.15rem;
+            font-weight: 500;
+            line-height: 1.5;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .generator-section {
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+            margin-bottom: 30px;
+        }
+        
+        .range-selector {
+            background: linear-gradient(145deg, #ffffff, #f5f7ff);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+        
+        .range-selector h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 1.6rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .range-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+        
+        .range-btn {
+            padding: 18px 12px;
+            background: white;
+            border: 2px solid #e8edff;
+            border-radius: 14px;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #3a4a6b;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .range-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            transition: width 0.4s ease;
+            z-index: -1;
+        }
+        
+        .range-btn:hover {
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2);
+        }
+        
+        .range-btn:hover::before {
+            width: 100%;
+        }
+        
+        .range-btn.active {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .range-btn.active::before {
+            width: 100%;
+        }
+        
+        .custom-range {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 18px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .custom-range span {
+            color: #3a4a6b;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .custom-range input {
+            width: 120px;
+            padding: 14px;
+            border: 2px solid #dde4ff;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+            color: #3a4a6b;
+            transition: all 0.3s;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .custom-range input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .custom-range button {
+            padding: 14px 28px;
+            background: linear-gradient(to right, #3a4a6b, #1a1a2e);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 5px 15px rgba(58, 74, 107, 0.2);
+        }
+        
+        .custom-range button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(58, 74, 107, 0.3);
+        }
+        
+        .result-section {
+            background: linear-gradient(145deg, #ffffff, #f5f7ff);
+            border-radius: 20px;
+            padding: 35px 30px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+        
+        .result-section h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 1.6rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .number-display-container {
+            background: linear-gradient(135deg, #f8faff, #ffffff);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 25px 0;
+            border: 2px dashed #dde4ff;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .number-display {
+            font-size: 6.5rem;
+            font-weight: 900;
+            color: #3a4a6b;
+            text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.1);
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .range-indicator {
+            position: absolute;
+            bottom: 15px;
+            right: 20px;
+            font-size: 1rem;
+            color: #667eea;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 6px 15px;
+            border-radius: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .generate-btn {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 22px 50px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.3);
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .generate-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.7s;
+            z-index: -1;
+        }
+        
+        .generate-btn:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+        }
+        
+        .generate-btn:hover::before {
+            left: 100%;
+        }
+        
+        .generate-btn:active {
+            transform: translateY(-2px);
+        }
+        
+        .footer {
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 1px solid #e8edff;
+            color: #7f8c8d;
+            font-size: 0.95rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 25px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .subtitle {
+                font-size: 1.05rem;
+                margin-bottom: 35px;
+            }
+            
+            .range-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .number-display {
+                font-size: 5rem;
+                height: 100px;
+            }
+            
+            .generate-btn {
+                padding: 20px 35px;
+                font-size: 1.3rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .range-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .number-display {
+                font-size: 4rem;
+                height: 90px;
+            }
+            
+            .generate-btn {
+                width: 100%;
+                padding: 18px 25px;
+                font-size: 1.2rem;
+            }
+            
+            .custom-range {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .custom-range input, .custom-range button {
+                width: 100%;
+            }
+        }
+        
+        /* Animation for number generation */
+        @keyframes pulse {
+            0% { 
+                transform: scale(1);
+                text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.1);
+            }
+            50% { 
+                transform: scale(1.08);
+                text-shadow: 5px 5px 15px rgba(102, 126, 234, 0.3);
+            }
+            100% { 
+                transform: scale(1);
+                text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.1);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .pulse {
+            animation: pulse 0.5s ease;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            border-radius: 50%;
+            z-index: 1;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <i class="fas fa-random" style="color: #667eea;"></i>
+            Random Number Generator
+        </h1>
+        <p class="subtitle">Select a range from the options below or set a custom maximum value. Click "Generate" to get your random number.</p>
+        
+        <div class="generator-section">
+            <div class="range-selector">
+                <h2>
+                    <i class="fas fa-sliders-h"></i>
+                    Choose Your Range
+                </h2>
+                <p style="color: #5d5d7a; margin-bottom: 20px;">Pick from predefined options or set your own</p>
+                
+                <div class="range-buttons" id="rangeButtons">
+                    <!-- Range buttons will be generated by JavaScript -->
+                </div>
+                
+                <div class="custom-range">
+                    <span>Custom Range: 1 to</span>
+                    <input type="number" id="customMax" min="2" max="2000" value="500">
+                    <button id="setCustom">
+                        <i class="fas fa-check-circle"></i> Apply Custom Range
+                    </button>
+                </div>
+            </div>
+            
+            <div class="result-section">
+                <h2>
+                    <i class="fas fa-dice"></i>
+                    Your Random Number
+                </h2>
+                <div class="number-display-container">
+                    <div class="number-display" id="numberDisplay">--</div>
+                    <div class="range-indicator" id="rangeIndicator">Range: 1-200</div>
+                </div>
+                <button class="generate-btn" id="generateBtn">
+                    <i class="fas fa-bolt"></i> Generate Random Number
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Predefined ranges as specified
+        const predefinedRanges = [200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000];
+        let currentMax = 200; // Default range
+        
+        // DOM elements
+        const rangeButtonsContainer = document.getElementById('rangeButtons');
+        const numberDisplay = document.getElementById('numberDisplay');
+        const generateBtn = document.getElementById('generateBtn');
+        const customMaxInput = document.getElementById('customMax');
+        const setCustomBtn = document.getElementById('setCustom');
+        const rangeIndicator = document.getElementById('rangeIndicator');
+        
+        // Initialize the range buttons
+        function initializeRangeButtons() {
+            rangeButtonsContainer.innerHTML = '';
+            
+            predefinedRanges.forEach(range => {
+                const button = document.createElement('button');
+                button.className = 'range-btn';
+                if (range === currentMax) button.classList.add('active');
+                button.textContent = `1 - ${range}`;
+                button.dataset.max = range;
+                
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    document.querySelectorAll('.range-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked button
+                    button.classList.add('active');
+                    
+                    // Set current max
+                    currentMax = range;
+                    
+                    // Update custom input to match
+                    customMaxInput.value = range;
+                    
+                    // Update range indicator
+                    rangeIndicator.textContent = `Range: 1-${range}`;
+                    
+                    // Generate a number immediately when range is changed
+                    generateRandomNumber();
+                });
+                
+                rangeButtonsContainer.appendChild(button);
+            });
+        }
+        
+        // Create confetti effect
+        function createConfetti() {
+            const numberContainer = document.querySelector('.number-display-container');
+            
+            // Remove existing confetti
+            document.querySelectorAll('.confetti').forEach(confetti => {
+                confetti.remove();
+            });
+            
+            // Create new confetti
+            for (let i = 0; i < 20; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                
+                // Random position
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                
+                // Random size
+                const size = Math.random() * 8 + 4;
+                
+                // Random color
+                const hue = Math.floor(Math.random() * 60) + 220; // Purple/blue range
+                const saturation = Math.floor(Math.random() * 30) + 70;
+                const lightness = Math.floor(Math.random() * 20) + 50;
+                
+                // Apply styles
+                confetti.style.left = `${posX}%`;
+                confetti.style.top = `${posY}%`;
+                confetti.style.width = `${size}px`;
+                confetti.style.height = `${size}px`;
+                confetti.style.background = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+                
+                // Random animation
+                const duration = Math.random() * 1 + 0.5;
+                const delay = Math.random() * 0.5;
+                
+                confetti.style.animation = `
+                    confettiFall ${duration}s ease-out ${delay}s forwards,
+                    confettiRotate ${duration * 2}s linear ${delay}s infinite
+                `;
+                
+                // Add to container
+                numberContainer.appendChild(confetti);
+                
+                // Remove after animation completes
+                setTimeout(() => {
+                    confetti.remove();
+                }, (duration + delay) * 1000);
+            }
+        }
+        
+        // Add CSS for confetti animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes confettiFall {
+                0% {
+                    transform: translateY(-100px) rotate(0deg);
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateY(100px) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+            
+            @keyframes confettiRotate {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Generate a random number
+        function generateRandomNumber() {
+            // Generate random number between 1 and currentMax
+            const randomNumber = Math.floor(Math.random() * currentMax) + 1;
+            
+            // Display with animation
+            numberDisplay.textContent = randomNumber;
+            numberDisplay.classList.add('pulse');
+            
+            // Create confetti effect
+            createConfetti();
+            
+            // Remove animation class after animation completes
+            setTimeout(() => {
+                numberDisplay.classList.remove('pulse');
+            }, 500);
+            
+            return randomNumber;
+        }
+        
+        // Event listeners
+        generateBtn.addEventListener('click', generateRandomNumber);
+        
+        setCustomBtn.addEventListener('click', () => {
+            let customMax = parseInt(customMaxInput.value);
+            
+            // Validate input
+            if (isNaN(customMax) || customMax < 2) {
+                alert("Please enter a number greater than 1");
+                customMaxInput.value = currentMax;
+                return;
+            }
+            
+            // Cap at 2000 as specified
+            if (customMax > 2000) {
+                alert("Maximum range is 1-2000. Setting to 2000.");
+                customMax = 2000;
+                customMaxInput.value = 2000;
+            }
+            
+            // Remove active class from all predefined range buttons
+            document.querySelectorAll('.range-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Set current max
+            currentMax = customMax;
+            
+            // Update range indicator
+            rangeIndicator.textContent = `Range: 1-${customMax}`;
+            
+            // Generate a number with the new range
+            generateRandomNumber();
+        });
+        
+        // Allow Enter key to set custom range
+        customMaxInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                setCustomBtn.click();
+            }
+        });
+        
+        // Input validation for custom range
+        customMaxInput.addEventListener('input', () => {
+            let value = parseInt(customMaxInput.value);
+            
+            if (value > 2000) {
+                customMaxInput.value = 2000;
+            } else if (value < 2 && customMaxInput.value !== '') {
+                customMaxInput.value = 2;
+            }
+        });
+        
+        // Initialize the app
+        function initApp() {
+            initializeRangeButtons();
+            
+            // Generate initial number
+            generateRandomNumber();
+        }
+        
+        // Start the app when page loads
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
