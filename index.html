@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Random Number Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* Main Container */
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            padding: 25px 20px;
+            margin: 0 auto;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+        
+        .header .icon {
+            color: #6a11cb;
+            margin-right: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        /* Range Selection */
+        .range-section {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 20px 15px;
+            margin-bottom: 25px;
+            border: 1px solid #e8edff;
+        }
+        
+        .section-title {
+            color: #2c3e50;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .range-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        
+        .range-btn {
+            padding: 16px 10px;
+            background: white;
+            border: 2px solid #e0e7ff;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #3a4a6b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        
+        .range-btn:hover, .range-btn:active {
+            background: #f0f5ff;
+            border-color: #6a11cb;
+            transform: translateY(-2px);
+        }
+        
+        .range-btn.active {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.2);
+        }
+        
+        /* Custom Range */
+        .custom-range {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .custom-range label {
+            color: #3a4a6b;
+            font-weight: 600;
+            font-size: 16px;
+            text-align: center;
+        }
+        
+        .custom-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .custom-input-group input {
+            width: 100%;
+            max-width: 200px;
+            padding: 14px;
+            border: 2px solid #dde4ff;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            color: #3a4a6b;
+            background: white;
+        }
+        
+        .custom-input-group input:focus {
+            outline: none;
+            border-color: #6a11cb;
+            box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
+        }
+        
+        .custom-btn {
+            padding: 14px 25px;
+            background: linear-gradient(to right, #3a4a6b, #2c3e50);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+            max-width: 200px;
+        }
+        
+        .custom-btn:hover, .custom-btn:active {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(58, 74, 107, 0.2);
+        }
+        
+        /* Result Section */
+        .result-section {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 25px 20px;
+            margin-bottom: 25px;
+            border: 1px solid #e8edff;
+        }
+        
+        .result-display {
+            background: white;
+            border-radius: 15px;
+            padding: 30px 20px;
+            margin: 20px 0;
+            border: 2px dashed #dde4ff;
+            text-align: center;
+            position: relative;
+        }
+        
+        .number-display {
+            font-size: 72px;
+            font-weight: 900;
+            color: #2c3e50;
+            line-height: 1;
+            min-height: 86px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            letter-spacing: 1px;
+        }
+        
+        .range-indicator {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            font-size: 14px;
+            color: #6a11cb;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 5px 12px;
+            border-radius: 15px;
+        }
+        
+        /* Generate Button */
+        .generate-btn {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 20px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 10px;
+            box-shadow: 0 8px 20px rgba(106, 17, 203, 0.2);
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        
+        .generate-btn:hover, .generate-btn:active {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(106, 17, 203, 0.3);
+        }
+        
+        .generate-btn:active {
+            transform: translateY(-1px);
+        }
+        
+        /* Responsive Adjustments */
+        @media (min-width: 400px) {
+            .range-buttons {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .custom-input-group {
+                flex-direction: row;
+                justify-content: center;
+            }
+            
+            .custom-btn {
+                width: auto;
+            }
+        }
+        
+        @media (min-width: 500px) {
+            .container {
+                padding: 30px 25px;
+            }
+            
+            .range-buttons {
+                grid-template-columns: repeat(5, 1fr);
+            }
+            
+            .header h1 {
+                font-size: 32px;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .container {
+                max-width: 700px;
+                padding: 35px 30px;
+            }
+            
+            .range-buttons {
+                gap: 15px;
+            }
+            
+            .range-btn {
+                padding: 18px 10px;
+                font-size: 17px;
+            }
+            
+            .number-display {
+                font-size: 84px;
+            }
+            
+            .generate-btn {
+                padding: 22px;
+                font-size: 20px;
+            }
+        }
+        
+        /* Animation for number generation */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .pulse {
+            animation: pulse 0.4s ease;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.3s ease;
+        }
+        
+        /* Prevent text selection on buttons */
+        .range-btn, .generate-btn, .custom-btn {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        
+        /* Ensure inputs are readable on iOS */
+        input[type="number"] {
+            -webkit-appearance: none;
+            -moz-appearance: textfield;
+        }
+        
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        /* Touch-friendly sizes */
+        @media (max-width: 350px) {
+            .range-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .number-display {
+                font-size: 60px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+        
+        /* Fix for very small screens */
+        @media (max-height: 600px) {
+            body {
+                padding: 10px;
+                align-items: flex-start;
+                min-height: auto;
+            }
+            
+            .container {
+                margin: 10px auto;
+            }
+        }
+        
+        /* Ensure content doesn't overflow on small screens */
+        .container {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-random icon"></i> Random Number Generator</h1>
+            <p>Select a range and generate a random number between 1 and your chosen maximum</p>
+        </div>
+        
+        <div class="range-section">
+            <div class="section-title">
+                <i class="fas fa-sliders-h"></i>
+                <span>Select Range</span>
+            </div>
+            
+            <div class="range-buttons" id="rangeButtons">
+                <!-- Range buttons will be generated by JavaScript -->
+            </div>
+            
+            <div class="custom-range">
+                <label>Custom Range: 1 to</label>
+                <div class="custom-input-group">
+                    <input type="number" id="customMax" min="2" max="2000" value="500" inputmode="numeric">
+                    <button class="custom-btn" id="setCustom">
+                        <i class="fas fa-check"></i> Apply
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="result-section">
+            <div class="section-title">
+                <i class="fas fa-dice"></i>
+                <span>Your Number</span>
+            </div>
+            
+            <div class="result-display">
+                <div class="number-display" id="numberDisplay">--</div>
+                <div class="range-indicator" id="rangeIndicator">Range: 1-200</div>
+            </div>
+            
+            <button class="generate-btn" id="generateBtn">
+                <i class="fas fa-bolt"></i> Generate Random Number
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Predefined ranges as specified
+        const predefinedRanges = [200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000];
+        let currentMax = 200; // Default range
+        
+        // DOM elements
+        const rangeButtonsContainer = document.getElementById('rangeButtons');
+        const numberDisplay = document.getElementById('numberDisplay');
+        const generateBtn = document.getElementById('generateBtn');
+        const customMaxInput = document.getElementById('customMax');
+        const setCustomBtn = document.getElementById('setCustom');
+        const rangeIndicator = document.getElementById('rangeIndicator');
+        
+        // Initialize the range buttons
+        function initializeRangeButtons() {
+            rangeButtonsContainer.innerHTML = '';
+            
+            predefinedRanges.forEach(range => {
+                const button = document.createElement('button');
+                button.className = 'range-btn';
+                if (range === currentMax) button.classList.add('active');
+                button.textContent = `1-${range}`;
+                button.dataset.max = range;
+                
+                // Touch/click event
+                button.addEventListener('click', handleRangeButtonClick);
+                button.addEventListener('touchend', handleRangeButtonClick);
+                
+                rangeButtonsContainer.appendChild(button);
+            });
+        }
+        
+        // Handle range button click
+        function handleRangeButtonClick(e) {
+            e.preventDefault();
+            const button = e.currentTarget;
+            const range = parseInt(button.dataset.max);
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.range-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            button.classList.add('active');
+            
+            // Set current max
+            currentMax = range;
+            
+            // Update custom input to match
+            customMaxInput.value = range;
+            
+            // Update range indicator
+            rangeIndicator.textContent = `Range: 1-${range}`;
+            
+            // Generate a number immediately when range is changed
+            generateRandomNumber();
+        }
+        
+        // Generate a random number
+        function generateRandomNumber() {
+            // Generate random number between 1 and currentMax
+            const randomNumber = Math.floor(Math.random() * currentMax) + 1;
+            
+            // Display with animation
+            numberDisplay.textContent = randomNumber;
+            numberDisplay.classList.remove('pulse');
+            void numberDisplay.offsetWidth; // Trigger reflow
+            numberDisplay.classList.add('pulse');
+            
+            return randomNumber;
+        }
+        
+        // Set custom range
+        function setCustomRange() {
+            let customMax = parseInt(customMaxInput.value);
+            
+            // Validate input
+            if (isNaN(customMax) || customMax < 2) {
+                alert("Please enter a number greater than 1");
+                customMaxInput.value = currentMax;
+                return;
+            }
+            
+            // Cap at 2000 as specified
+            if (customMax > 2000) {
+                alert("Maximum range is 1-2000. Setting to 2000.");
+                customMax = 2000;
+                customMaxInput.value = 2000;
+            }
+            
+            // Remove active class from all predefined range buttons
+            document.querySelectorAll('.range-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Set current max
+            currentMax = customMax;
+            
+            // Update range indicator
+            rangeIndicator.textContent = `Range: 1-${customMax}`;
+            
+            // Generate a number with the new range
+            generateRandomNumber();
+        }
+        
+        // Event listeners
+        generateBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            generateRandomNumber();
+        });
+        
+        generateBtn.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            generateRandomNumber();
+        });
+        
+        setCustomBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            setCustomRange();
+        });
+        
+        setCustomBtn.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            setCustomRange();
+        });
+        
+        // Allow Enter key to set custom range
+        customMaxInput.addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                setCustomRange();
+            }
+        });
+        
+        // Input validation for custom range
+        customMaxInput.addEventListener('input', function() {
+            let value = parseInt(this.value);
+            
+            if (value > 2000) {
+                this.value = 2000;
+            } else if (value < 2 && this.value !== '') {
+                this.value = 2;
+            }
+        });
+        
+        // Prevent form submission on Enter in input
+        customMaxInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+            }
+        });
+        
+        // Initialize the app
+        function initApp() {
+            initializeRangeButtons();
+            
+            // Generate initial number
+            generateRandomNumber();
+            
+            // Set initial range indicator
+            rangeIndicator.textContent = `Range: 1-${currentMax}`;
+            
+            // Focus management for better accessibility
+            document.addEventListener('touchstart', function() {}, {passive: true});
+        }
+        
+        // Start the app when page loads
+        document.addEventListener('DOMContentLoaded', initApp);
+        
+        // Handle resize events
+        window.addEventListener('resize', function() {
+            // Ensure layout stays consistent on orientation changes
+            setTimeout(function() {
+                document.body.style.height = window.innerHeight + 'px';
+            }, 100);
+        });
+        
+        // Prevent zoom on double-tap (iOS)
+        document.addEventListener('touchstart', function(event) {
+            if (event.touches.length > 1) {
+                event.preventDefault();
+            }
+        }, { passive: false });
+        
+        // Set initial body height for mobile
+        document.body.style.height = window.innerHeight + 'px';
+    </script>
+</body>
+</html>
