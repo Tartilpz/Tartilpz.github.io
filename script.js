@@ -125,13 +125,13 @@ const allMovies = [
     },
     {
         id: 12,
-        title: "Tiger 3",
-        poster: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1025&q=80",
-        category: "Hindi",
-        year: 2023,
+        title: "Tiffin Box",
+        poster: "https://i.imgbd.org/poster_47l81770738064.jpg",
+        category: "Bangla",
+        year: 2026,
         isNew: true,
         downloads: [
-            { quality: "1080p", url: "#" }
+            { quality: "1080p", url: "https://mcloud.guru/0d4316fce64a6f8" }
         ]
     }
 ];
