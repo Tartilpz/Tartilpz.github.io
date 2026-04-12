@@ -4,7 +4,7 @@ const allMovies = [
         id: 12,
         title: "Project Hail Mary",
         poster: "https://image.tmdb.org/t/p/original/gK2Qp7XywbzdIFNSPavEWlqw1DA.jpg",
-        category: "Hindi Dubbed",
+        category: "Dual Audio",
         year: 2026,
         isNew: true,
         isHallPrint: false,
@@ -16,7 +16,7 @@ const allMovies = [
         id: 11,
         title: "Crime 101",
         poster: "https://i.imgbd.org/poster_l94h1772560631.jpg",
-        category: "Hindi Dubbed",
+        category: "Dual Audio",
         year: 2026,
         isNew: true,
         isHallPrint: false,
@@ -28,7 +28,7 @@ const allMovies = [
         id: 10,
         title: "The Truce",
         poster: "https://image.tmdb.org/t/p/w300/gk3VVTTRWVhuAVpuxJrGKCKBat5.jpg",
-        category: "Hindi Dubbed",
+        category: "Dual Audio",
         year: 2025,
         isNew: true,
         isHallPrint: false,
@@ -40,7 +40,7 @@ const allMovies = [
         id: 9,
         title: "The Carpenter's Son",
         poster: "https://image.tmdb.org/t/p/original/2Q44ofC6V9k6vJFToFwpwX86YUn.jpg",
-        category: "Hindi Dubbed",
+        category: "Dual Audio",
         year: 2025,
         isNew: true,
         isHallPrint: false,
@@ -79,9 +79,9 @@ const allMovies = [
         category: "Hindi",
         year: 2026,
         isNew: true,
-        isHallPrint: true,
+        isHallPrint: false,
         downloads: [
-            { quality: "1080p", url: "https://mcloud.guru/37e3dcf511054cd" }
+            { quality: "1080p", url: "https://mcloud.guru/2127d6a37134044" }
         ]
     },
     {
