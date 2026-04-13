@@ -723,6 +723,3 @@ function init() {
         updatePaginationUI();
     }, 500);
 }
-
-// Start the app
-init();
