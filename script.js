@@ -17,7 +17,7 @@ const allMovies = [
         id: 15,
         title: "Jana Nayagan - Hindi Not Available",
         poster: "https://m.media-amazon.com/images/M/MV5BNDc0NTEzMjYtOWExZS00M2EwLTk5MzgtOTMxYTg3NmMxZmMzXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
-        category: "Hindi Dubbed",
+        category: "Tamil",
         year: 2026,
         isNew: true,
         isHallPrint: false,
